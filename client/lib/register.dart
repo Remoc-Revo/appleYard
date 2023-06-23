@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:client/provider/auth_provider.dart';
 
 class Register extends StatefulWidget {
@@ -131,11 +132,11 @@ class RegisterState extends State<Register> {
                       //are not displayed when they reoccur on proceeding submits
                       errorMessage = '';
 
-                      // if (errorMessage == '') {
-                      //   Provider.of<AuthProvider>(context, listen: false)
-                      //       .signUpUser(
-                      //           );
-                      // }
+                      if (errorMessage == '') {
+                        Provider.of<AuthProvider>(context, listen: false)
+                            .registerApple(id, yop, breed, row, column,
+                                _locationController.text);
+                      }
                       print(AuthProvider.signup_authMessage);
                       if (AuthProvider.signup_authMessage == 'success') {
                         Navigator.pushNamed(context, "/home");

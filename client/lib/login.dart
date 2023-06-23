@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:client/provider/auth_provider.dart';
 // import 'package:get_storage/get_storage.dart';
 
@@ -91,19 +92,15 @@ class LoginPageState extends State<LoginPage> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "/home");
-                    // Provider.of<AuthProvider>(context, listen: false)
-                    //     .signinUser(_email, _password);
+                    // Navigator.pushNamed(context, "/home");
+                    Provider.of<AuthProvider>(context, listen: false)
+                        .signinUser(_email, _password);
 
-                    // print("signinAuth:${AuthProvider.signin_authMessage}");
-                    // //if the server authenticates the login, redirect to the main page
-                    // if (AuthProvider.signin_authMessage == 'success') {
-                    //   if (AuthProvider.userId == '1') {
-                    //     Navigator.pushNamed(context, "/adminHome");
-                    //   } else {
-                    //     Navigator.pushNamed(context, "/home");
-                    //   }
-                    // }
+                    print("signinAuth:${AuthProvider.signin_authMessage}");
+                    //if the server authenticates the login, redirect to the main page
+                    if (AuthProvider.signin_authMessage == 'success') {
+                      Navigator.pushNamed(context, "/home");
+                    }
 
                     setState(() {
                       errorMessage = AuthProvider.errorMessage;
