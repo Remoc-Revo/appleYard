@@ -135,16 +135,18 @@ class RegisterState extends State<Register> {
                       if (errorMessage == '') {
                         Provider.of<AuthProvider>(context, listen: false)
                             .registerApple(id, yop, breed, row, column,
-                                _locationController.text);
+                                _locationController.text)
+                            .then((_) {
+                          if (AuthProvider.signup_authMessage == 'success') {
+                            Navigator.pushNamed(context, "/home");
+                          } else {
+                            setState(() {
+                              errorMessage += AuthProvider.errorMessage;
+                            });
+                          }
+                        });
                       }
                       print(AuthProvider.signup_authMessage);
-                      if (AuthProvider.signup_authMessage == 'success') {
-                        Navigator.pushNamed(context, "/home");
-                      }
-
-                      setState(() {
-                        errorMessage += AuthProvider.errorMessage;
-                      });
                     },
                     child: const Text('submit',
                         style: TextStyle(

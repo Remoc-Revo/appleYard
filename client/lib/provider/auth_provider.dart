@@ -24,17 +24,20 @@ class AuthProvider with ChangeNotifier {
       String col, String location) async {
     print("singuppppp");
 
-    final response = await http
-        .post(Uri.parse('http://192.168.43.167:3000/registerApple'), headers: {
-      "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
-    }, body: {
-      'id': id,
-      'yop': yop,
-      'breed': breed,
-      'row': row,
-      'col': col,
-      'location': location
-    });
+    signup_authMessage = "";
+    final response = await http.post(
+        Uri.parse('https://brindle-aboard-manatee.glitch.me/registerApple'),
+        headers: {
+          "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: {
+          'id': id,
+          'yop': yop,
+          'breed': breed,
+          'row': row,
+          'col': col,
+          'location': location
+        });
 
     Map<String, dynamic> map = jsonDecode(response.body);
 
@@ -48,9 +51,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signinUser(String email, String password) async {
+    signin_authMessage = "";
     print("login called");
     final response = await http.post(
-        Uri.parse('http://192.168.43.167:3000/user/signIn'),
+        Uri.parse('https://brindle-aboard-manatee.glitch.me/user/login'),
         headers: <String, String>{
           "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
         },
@@ -58,9 +62,10 @@ class AuthProvider with ChangeNotifier {
           'userEmail': email,
           'userPassword': password,
         });
-    print(response.body);
-    Map<String, dynamic> map = await jsonDecode(response.body);
 
+    Map<String, dynamic> map = await jsonDecode(response.body);
+    print("responseee");
+    print(map['message']);
     if (map['message'] != null && map['message'] == 'success') {
       signin_authMessage = map['message'];
     }

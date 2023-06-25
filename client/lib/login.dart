@@ -94,17 +94,19 @@ class LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     // Navigator.pushNamed(context, "/home");
                     Provider.of<AuthProvider>(context, listen: false)
-                        .signinUser(_email, _password);
+                        .signinUser(_email, _password)
+                        .then((_) {
+                      if (AuthProvider.signin_authMessage == 'success') {
+                        Navigator.pushNamed(context, "/home");
+                      } else {
+                        setState(() {
+                          errorMessage = AuthProvider.errorMessage;
+                        });
+                      }
+                    });
 
                     print("signinAuth:${AuthProvider.signin_authMessage}");
                     //if the server authenticates the login, redirect to the main page
-                    if (AuthProvider.signin_authMessage == 'success') {
-                      Navigator.pushNamed(context, "/home");
-                    }
-
-                    setState(() {
-                      errorMessage = AuthProvider.errorMessage;
-                    });
                   },
                   child: const Text('login',
                       style: TextStyle(
