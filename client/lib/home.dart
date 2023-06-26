@@ -13,15 +13,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<List<dynamic>> _futureData;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _futureData = fetchAppleData();
-  }
-
   Future<List<dynamic>> fetchAppleData() async {
     final response = await http
         .get(Uri.parse('https://brindle-aboard-manatee.glitch.me/appleData'));
@@ -54,31 +45,35 @@ class _MyHomePageState extends State<MyHomePage> {
           future: fetchAppleData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
               final List<dynamic> dataList = snapshot.data!;
 
-              return DataTable(
-                  columns: const [
-                    DataColumn(label: Text('ID')),
-                    DataColumn(label: Text('YOP')),
-                    DataColumn(label: Text('Breed')),
-                    DataColumn(label: Text('Row')),
-                    DataColumn(label: Text('Col')),
-                    DataColumn(label: Text('Geolocation')),
-                  ],
-                  rows: dataList.map<DataRow>((item) {
-                    return DataRow(cells: [
-                      DataCell(Text(item['ID'].toString())),
-                      DataCell(Text(item['YOP'].toString())),
-                      DataCell(Text(item['Breed'].toString())),
-                      DataCell(Text(item['Row'].toString())),
-                      DataCell(Text(item['Col'].toString())),
-                      DataCell(Text(item['Geolocation'].toString())),
-                    ]);
-                  }).toList());
+              return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                          columns: const [
+                            DataColumn(label: Text('ID')),
+                            DataColumn(label: Text('YOP')),
+                            DataColumn(label: Text('Breed')),
+                            DataColumn(label: Text('Row')),
+                            DataColumn(label: Text('Col')),
+                            DataColumn(label: Text('Geolocation')),
+                          ],
+                          rows: dataList.map<DataRow>((item) {
+                            return DataRow(cells: [
+                              DataCell(Text(item['ID'].toString())),
+                              DataCell(Text(item['YOP'].toString())),
+                              DataCell(Text(item['Breed'].toString())),
+                              DataCell(Text(item['Row'].toString())),
+                              DataCell(Text(item['Col'].toString())),
+                              DataCell(Text(item['Geolocation'].toString())),
+                            ]);
+                          }).toList())));
             }
           }),
       floatingActionButton: FloatingActionButton(

@@ -23,6 +23,8 @@ class LoginPageState extends State<LoginPage> {
   late String _email, _password;
 
   String errorMessage = "";
+  bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext Context) {
@@ -46,7 +48,7 @@ class LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(13.0),
               child: TextField(
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
                     hintText: 'Enter  valid email',
@@ -58,13 +60,24 @@ class LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(13.0),
               child: TextField(
-                obscureText: true,
+                obscureText: _obscurePassword,
                 keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                  hintText: 'Enter your secure Password',
-                ),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                    hintText: 'Enter your secure Password',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      child: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    )),
                 onChanged: (val) {
                   _password = val;
                 },
@@ -90,8 +103,11 @@ class LoginPageState extends State<LoginPage> {
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: TextButton(
+                child: ElevatedButton(
                   onPressed: () {
+                    setState(() {
+                      _isLoading = true;
+                    });
                     // Navigator.pushNamed(context, "/home");
                     Provider.of<AuthProvider>(context, listen: false)
                         .signinUser(_email, _password)
@@ -100,6 +116,7 @@ class LoginPageState extends State<LoginPage> {
                         Navigator.pushNamed(context, "/home");
                       } else {
                         setState(() {
+                          _isLoading = false;
                           errorMessage = AuthProvider.errorMessage;
                         });
                       }
@@ -108,11 +125,16 @@ class LoginPageState extends State<LoginPage> {
                     print("signinAuth:${AuthProvider.signin_authMessage}");
                     //if the server authenticates the login, redirect to the main page
                   },
-                  child: const Text('login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                      )),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text('login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                          )),
                 )),
             const SizedBox(
               height: 130,
