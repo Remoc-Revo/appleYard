@@ -20,8 +20,8 @@ class AuthProvider with ChangeNotifier {
   static String errorMessage = "";
   static String signup_authMessage = "";
   static String signin_authMessage = "";
-  Future<void> registerApple(String id, String yop, String breed, String row,
-      String col, String location) async {
+  Future<void> registerApple(
+      String yop, String breed, String row, String col, String location) async {
     print("singuppppp");
 
     signup_authMessage = "";
@@ -31,7 +31,6 @@ class AuthProvider with ChangeNotifier {
           "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
         },
         body: {
-          'id': id,
           'yop': yop,
           'breed': breed,
           'row': row,

@@ -14,6 +14,8 @@ class RegisterState extends State<Register> {
   late String id, yop, breed, row, column, location;
   late String confirmedPassword;
   var errorMessage = "";
+  FocusNode _focusNode = FocusNode();
+
   final TextEditingController _locationController = TextEditingController();
 
   @override
@@ -28,19 +30,19 @@ class RegisterState extends State<Register> {
                   color: Colors.green,
                   fontSize: 34,
                 )),
-            Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'ID',
-                  hintText: '',
-                ),
-                onChanged: (val) {
-                  id = val;
-                },
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(13.0),
+            //   child: TextField(
+            //     decoration: const InputDecoration(
+            //       border: OutlineInputBorder(),
+            //       labelText: 'ID',
+            //       hintText: '',
+            //     ),
+            //     onChanged: (val) {
+            //       id = val;
+            //     },
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(13.0),
               child: TextField(
@@ -94,6 +96,8 @@ class RegisterState extends State<Register> {
             Padding(
               padding: const EdgeInsets.all(13.0),
               child: TextField(
+                  focusNode: _focusNode,
+                  textInputAction: TextInputAction.none,
                   controller: _locationController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -104,6 +108,7 @@ class RegisterState extends State<Register> {
                     location = val;
                   },
                   onTap: () async {
+                    _focusNode.unfocus();
                     Position position = await Geolocator.getCurrentPosition(
                       desiredAccuracy: LocationAccuracy.high,
                     );
@@ -134,7 +139,7 @@ class RegisterState extends State<Register> {
 
                       if (errorMessage == '') {
                         Provider.of<AuthProvider>(context, listen: false)
-                            .registerApple(id, yop, breed, row, column,
+                            .registerApple(yop, breed, row, column,
                                 _locationController.text)
                             .then((_) {
                           if (AuthProvider.signup_authMessage == 'success') {
